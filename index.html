@@ -1,0 +1,297 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="application-name" content="Majo - 6 word puzzle" />
+    <meta
+      property="description"
+      content="Guess the hidden word in 6 tries. Unlimited puzzle words to test your skills."
+    />
+    <meta property="og:title" content="Majo - 6 word puzzle" />
+    <meta
+      property="og:url"
+      content="https://gallant-heisenberg-9705f5.netlify.app/"
+    />
+    <meta
+      property="og:description"
+      content="Guess the hidden word in 6 tries. Unlimited puzzle words to test your skills."
+    />
+    <meta property="og:image" content="logo.svg" />
+    <link rel="icon" href="logo.svg" type="image/x-icon" />
+    <title>MAJO</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>MAJO</header>
+    <main>
+      <div class="game_container">
+        <div class="row">
+          <div class="input_column"></div>
+          <div class="input_column"></div>
+          <div class="input_column"></div>
+          <div class="input_column"></div>
+          <div class="input_column"></div>
+        </div>
+        <div class="row">
+          <div class="input_column"></div>
+          <div class="input_column"></div>
+          <div class="input_column"></div>
+          <div class="input_column"></div>
+          <div class="input_column"></div>
+        </div>
+        <div class="row">
+          <div class="input_column"></div>
+          <div class="input_column"></div>
+          <div class="input_column"></div>
+          <div class="input_column"></div>
+          <div class="input_column"></div>
+        </div>
+        <div class="row">
+          <div class="input_column"></div>
+          <div class="input_column"></div>
+          <div class="input_column"></div>
+          <div class="input_column"></div>
+          <div class="input_column"></div>
+        </div>
+        <div class="row">
+          <div class="input_column"></div>
+          <div class="input_column"></div>
+          <div class="input_column"></div>
+          <div class="input_column"></div>
+          <div class="input_column"></div>
+        </div>
+        <div class="row">
+          <div class="input_column"></div>
+          <div class="input_column"></div>
+          <div class="input_column"></div>
+          <div class="input_column"></div>
+          <div class="input_column"></div>
+        </div>
+      </div>
+      <div class="keyboard_container">
+        <div class="row">
+          <div class="keyboard-key" data-key="Q">Q</div>
+          <div class="keyboard-key" data-key="W">W</div>
+          <div class="keyboard-key" data-key="E">E</div>
+          <div class="keyboard-key" data-key="R">R</div>
+          <div class="keyboard-key" data-key="T">T</div>
+          <div class="keyboard-key" data-key="Y">Y</div>
+          <div class="keyboard-key" data-key="U">U</div>
+          <div class="keyboard-key" data-key="I">I</div>
+          <div class="keyboard-key" data-key="O">O</div>
+          <div class="keyboard-key" data-key="P">P</div>
+        </div>
+        <div class="row">
+          <div class="keyboard-key" data-key="A">A</div>
+          <div class="keyboard-key" data-key="S">S</div>
+          <div class="keyboard-key" data-key="D">D</div>
+          <div class="keyboard-key" data-key="F">F</div>
+          <div class="keyboard-key" data-key="G">G</div>
+          <div class="keyboard-key" data-key="H">H</div>
+          <div class="keyboard-key" data-key="J">J</div>
+          <div class="keyboard-key" data-key="K">K</div>
+          <div class="keyboard-key" data-key="L">L</div>
+        </div>
+        <div class="row">
+          <div class="keyboard-key" data-key="ENTER">ENTER</div>
+          <div class="keyboard-key" data-key="Z">Z</div>
+          <div class="keyboard-key" data-key="X">X</div>
+          <div class="keyboard-key" data-key="C">C</div>
+          <div class="keyboard-key" data-key="V">V</div>
+          <div class="keyboard-key" data-key="B">B</div>
+          <div class="keyboard-key" data-key="N">N</div>
+          <div class="keyboard-key" data-key="M">M</div>
+          <div class="keyboard-key" data-key="CLEAR">CLEAR</div>
+        </div>
+      </div>
+    </main>
+    <script src="constants.js"></script>
+    <script>
+      let rows = [...document.querySelectorAll(".row")];
+      let keyboardKeys = [...document.querySelectorAll(".keyboard-key")];
+      let keyMaps = new Map();
+      for (let i = 65; i <= 90; i++) {
+        keyMaps.set(String.fromCharCode(i), STATUS.NOT_YET_FOUND);
+      }
+
+      let size = dictionary.length;
+      const answerIndex = Math.round(Math.random() * size);
+      let correctAnswer = dictionary[answerIndex];
+      console.log(correctAnswer);
+      let hasGuessed = false;
+      let currentAttempt = 0;
+      let currentWord = [];
+
+      function checkCorrectPosition(element, ans, guess, index) {
+        let foundIndex = ans.indexOf(element);
+        return (
+          (element === ans[foundIndex] && index === foundIndex) ||
+          ans.lastIndexOf(element) == index
+        );
+      }
+
+      function getStatistics(guess, ans) {
+        let arr = Array(5).fill(STATUS.NOT_YET_FOUND);
+        ans.split("").forEach((char, index) => {
+          if (guess[index] == char) {
+            arr[index] = STATUS.CORRECT_POSITION;
+          } else {
+            for (let i = 0; i < 5; i++) {
+              if (arr[i] == STATUS.NOT_YET_FOUND) {
+                if (char == guess[i]) {
+                  arr[i] = STATUS.WRONG_POSITION;
+                  break;
+                }
+              }
+            }
+          }
+        });
+        arr.forEach((ele, index) => {
+          if (ele == STATUS.NOT_YET_FOUND) {
+            arr[index] = STATUS.NOT_IN_THE_WORD;
+          }
+        });
+        return arr;
+      }
+
+      const updateRowWithStats = function (stats) {
+        let columns = rows[currentAttempt].querySelectorAll(".input_column");
+        columns.forEach((element, index) => {
+          element.style.background =
+            stats[index] == STATUS.CORRECT_POSITION
+              ? COLOR.CORRECT_POSITION
+              : stats[index] == STATUS.NOT_IN_THE_WORD
+              ? COLOR.NOT_IN_THE_WORD
+              : COLOR.WRONG_POSITION;
+        });
+      };
+
+      const updateKeyBoardWithStats = function (stats) {
+        stats.forEach((stat, index) => {
+          let currentKeyStatus = keyMaps.get(currentWord[index]);
+          if (
+            currentKeyStatus == STATUS.CORRECT_POSITION ||
+            (currentKeyStatus == STATUS.WRONG_POSITION &&
+              stat == STATUS.NOT_IN_THE_WORD)
+          )
+            return;
+          keyMaps.set(currentWord[index], stat);
+        });
+        updateKeyBoardColor();
+      };
+
+      const updateKeyBoardColor = function () {
+        keyMaps.forEach((v, k) => {
+          let element = document.querySelector("[data-key='" + k + "']");
+          element.style.background = COLOR[v];
+        });
+      };
+
+      const updateRow = function () {
+        let columns = rows[currentAttempt].querySelectorAll(".input_column");
+        columns.forEach((element, index) => {
+          if (currentWord[index]) {
+            element.innerHTML = currentWord[index];
+          } else {
+            element.innerHTML = "";
+          }
+        });
+      };
+
+      const isValidWord = function (currentWordString) {
+        return dictionary.indexOf(currentWordString) === -1 ? false : true;
+      };
+
+      const vibrateWords = function () {
+        let columns = rows[currentAttempt].querySelectorAll(".input_column");
+        columns.forEach((el) => {
+          el.classList.add("shake");
+          setTimeout(() => {
+            el.classList.remove("shake");
+          }, 200);
+        });
+      };
+
+      const handleEnterKeyPress = function () {
+        let currentWordString = currentWord.join("").toLowerCase();
+        if (currentWord.length != 5) return;
+        if (isValidWord(currentWordString)) {
+          let stats;
+          if (currentWordString === correctAnswer) {
+            hasGuessed = true;
+            stats = Array(5).fill(STATUS.CORRECT_POSITION);
+          } else {
+            stats = getStatistics(currentWordString, correctAnswer);
+          }
+          updateRowWithStats(stats);
+          updateKeyBoardWithStats(stats);
+          if (currentWordString === correctAnswer) {
+            hasGuessed = true;
+            alert("You got it : " + correctAnswer);
+          }
+          currentWord = [];
+          currentAttempt = currentAttempt + 1;
+          if (!hasGuessed && currentAttempt > 5) {
+            alert(
+              "You've exhausted your attempts. The word was : " + correctAnswer
+            );
+          }
+        } else {
+          vibrateWords();
+        }
+      };
+
+      const handleKeyPress = function (e) {
+        if (hasGuessed) {
+          console.log("Winner");
+          return;
+        }
+        if (currentAttempt > 5) {
+          console.log("GameOver");
+          return;
+        }
+        let keyCode = e.keyCode;
+        // if (keyCode == 13 || keyCode == 8 || (keyCode >= 65 && keyCode <= 90)) {
+        //   console.log(keyCode);
+        // }
+        if (keyCode >= 65 && keyCode <= 90) {
+          if (currentWord.length < 5)
+            currentWord.push(String.fromCharCode(keyCode));
+          updateRow();
+        }
+
+        if (keyCode == 8) {
+          currentWord.pop();
+          updateRow();
+        }
+
+        if (keyCode == 13) {
+          handleEnterKeyPress();
+        }
+
+        //65-90 is alphabtets
+        //32 is space
+        //8 is backspace
+        //13 is enter
+      };
+
+      document.addEventListener("keydown", handleKeyPress);
+
+      keyboardKeys.forEach((key) =>
+        key.addEventListener("click", (e) => {
+          let keyCode;
+          let textValue = e.target.textContent;
+          if (textValue === "ENTER") {
+            keyCode = 13;
+          } else if (textValue === "CLEAR") {
+            keyCode = 8;
+          } else {
+            keyCode = textValue.charCodeAt(0);
+          }
+          let pseudoEvent = { keyCode };
+          handleKeyPress(pseudoEvent);
+        })
+      );
+    </script>
+  </body>
+</html>
