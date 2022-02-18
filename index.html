@@ -107,7 +107,7 @@
     </main>
     <script src="constants.js"></script>
     <script>
-      let rows = [...document.querySelectorAll(".row")];
+      let rows = [...document.querySelectorAll(".game_container .row")];
       let keyboardKeys = [...document.querySelectorAll(".keyboard-key")];
       let keyMaps = new Map();
       for (let i = 65; i <= 90; i++) {
@@ -115,7 +115,7 @@
       }
 
       let size = dictionary.length;
-      const answerIndex = Math.round(Math.random() * size);
+      let answerIndex = Math.round(Math.random() * size);
       let correctAnswer = dictionary[answerIndex];
       console.log(correctAnswer);
       let hasGuessed = false;
@@ -237,17 +237,24 @@
           }
           updateRowWithStats(stats);
           updateKeyBoardWithStats(stats);
-          if (currentWordString === correctAnswer) {
-            hasGuessed = true;
-            alert("You got it : " + correctAnswer);
-          }
           currentWord = [];
           currentAttempt = currentAttempt + 1;
+          if (currentWordString === correctAnswer) {
+            hasGuessed = true;
+            alert(
+              "You got it : " +
+                correctAnswer +
+                "\nStarting a new game right away :)"
+            );
+            reset();
+          }
           if (!hasGuessed && currentAttempt > 5) {
             stopInputing();
             alert(
               "You've exhausted your attempts. The word was : " + correctAnswer
             );
+
+            reset();
           }
         } else {
           vibrateWords();
@@ -300,6 +307,34 @@
         }
         let pseudoEvent = { keyCode };
         handleKeyPress(pseudoEvent);
+      }
+
+      function reset() {
+        for (let i = 65; i <= 90; i++) {
+          keyMaps.set(String.fromCharCode(i), STATUS.NOT_YET_FOUND);
+        }
+
+        rows.forEach((row) => {
+          let columns = [...row.children];
+          columns.forEach((column) => {
+            column.innerHTML = "";
+            column.classList.remove(
+              ...["correct", "incorrect", "wrong-position"]
+            );
+          });
+        });
+
+        keyboardKeys.forEach((key) => {
+          key.classList.remove(...["correct", "incorrect", "wrong-position"]);
+        });
+
+        answerIndex = Math.round(Math.random() * size);
+        correctAnswer = dictionary[answerIndex];
+        console.log(correctAnswer);
+        hasGuessed = false;
+        currentAttempt = 0;
+        currentWord = [];
+        startInputing();
       }
 
       startInputing();
