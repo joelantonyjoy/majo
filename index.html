@@ -110,17 +110,12 @@
       let rows = [...document.querySelectorAll(".game_container .row")];
       let keyboardKeys = [...document.querySelectorAll(".keyboard-key")];
       let keyMaps = new Map();
-      for (let i = 65; i <= 90; i++) {
-        keyMaps.set(String.fromCharCode(i), STATUS.NOT_YET_FOUND);
-      }
-
-      let size = dictionary.length;
-      let answerIndex = Math.round(Math.random() * size);
-      let correctAnswer = dictionary[answerIndex];
-      console.log(correctAnswer);
-      let hasGuessed = false;
-      let currentAttempt = 0;
-      let currentWord = [];
+      let size,
+        answerIndex,
+        correctAnswer,
+        hasGuessed,
+        currentAttempt,
+        currentWord;
 
       function startInputing() {
         document.addEventListener("keydown", handleKeyPress);
@@ -226,38 +221,39 @@
       function handleEnterKeyPress() {
         let currentWordString = currentWord.join("").toLowerCase();
         if (currentWord.length != 5) return;
-        if (isValidWord(currentWordString)) {
-          let stats;
-          if (currentWordString === correctAnswer) {
-            hasGuessed = true;
-            stopInputing();
-            stats = Array(5).fill(STATUS.CORRECT_POSITION);
-          } else {
-            stats = getStatistics(currentWordString, correctAnswer);
-          }
-          updateRowWithStats(stats);
-          updateKeyBoardWithStats(stats);
-          currentWord = [];
-          currentAttempt = currentAttempt + 1;
-          if (currentWordString === correctAnswer) {
-            hasGuessed = true;
+        if (!isValidWord(currentWordString)) {
+          vibrateWords();
+          return;
+        }
+        let stats;
+        if (currentWordString === correctAnswer) {
+          hasGuessed = true;
+          stopInputing();
+          stats = Array(5).fill(STATUS.CORRECT_POSITION);
+        } else {
+          stats = getStatistics(currentWordString, correctAnswer);
+        }
+        updateRowWithStats(stats);
+        updateKeyBoardWithStats(stats);
+        currentWord = [];
+        currentAttempt = currentAttempt + 1;
+        if (hasGuessed || (!hasGuessed && currentAttempt > 5)) {
+          if (hasGuessed) {
             alert(
               "You got it : " +
                 correctAnswer +
                 "\nStarting a new game right away :)"
             );
-            reset();
-          }
-          if (!hasGuessed && currentAttempt > 5) {
+          } else {
             stopInputing();
             alert(
-              "You've exhausted your attempts. The word was : " + correctAnswer
+              "You've exhausted your attempts. The word was : " +
+                correctAnswer +
+                "\nStarting a new game right away :)"
             );
-
-            reset();
           }
-        } else {
-          vibrateWords();
+          reset();
+          startNewGame();
         }
       }
 
@@ -327,7 +323,13 @@
         keyboardKeys.forEach((key) => {
           key.classList.remove(...["correct", "incorrect", "wrong-position"]);
         });
+      }
 
+      function startNewGame() {
+        for (let i = 65; i <= 90; i++) {
+          keyMaps.set(String.fromCharCode(i), STATUS.NOT_YET_FOUND);
+        }
+        size = dictionary.length;
         answerIndex = Math.round(Math.random() * size);
         correctAnswer = dictionary[answerIndex];
         console.log(correctAnswer);
@@ -337,7 +339,7 @@
         startInputing();
       }
 
-      startInputing();
+      startNewGame();
     </script>
   </body>
 </html>
