@@ -154,7 +154,7 @@
         return arr;
       }
 
-      const updateRowWithStats = function (stats) {
+      function updateRowWithStats(stats) {
         let columns = rows[currentAttempt].querySelectorAll(".input_column");
         columns.forEach((element, index) => {
           element.style.background =
@@ -164,9 +164,9 @@
               ? COLOR.NOT_IN_THE_WORD
               : COLOR.WRONG_POSITION;
         });
-      };
+      }
 
-      const updateKeyBoardWithStats = function (stats) {
+      function updateKeyBoardWithStats(stats) {
         stats.forEach((stat, index) => {
           let currentKeyStatus = keyMaps.get(currentWord[index]);
           if (
@@ -178,16 +178,16 @@
           keyMaps.set(currentWord[index], stat);
         });
         updateKeyBoardColor();
-      };
+      }
 
-      const updateKeyBoardColor = function () {
+      function updateKeyBoardColor() {
         keyMaps.forEach((v, k) => {
           let element = document.querySelector("[data-key='" + k + "']");
           element.style.background = COLOR[v];
         });
-      };
+      }
 
-      const updateRow = function () {
+      function updateRow() {
         let columns = rows[currentAttempt].querySelectorAll(".input_column");
         columns.forEach((element, index) => {
           if (currentWord[index]) {
@@ -196,13 +196,13 @@
             element.innerHTML = "";
           }
         });
-      };
+      }
 
-      const isValidWord = function (currentWordString) {
+      function isValidWord(currentWordString) {
         return dictionary.indexOf(currentWordString) === -1 ? false : true;
-      };
+      }
 
-      const vibrateWords = function () {
+      function vibrateWords() {
         let columns = rows[currentAttempt].querySelectorAll(".input_column");
         columns.forEach((el) => {
           el.classList.add("shake");
@@ -210,9 +210,9 @@
             el.classList.remove("shake");
           }, 200);
         });
-      };
+      }
 
-      const handleEnterKeyPress = function () {
+      function handleEnterKeyPress() {
         let currentWordString = currentWord.join("").toLowerCase();
         if (currentWord.length != 5) return;
         if (isValidWord(currentWordString)) {
@@ -239,9 +239,9 @@
         } else {
           vibrateWords();
         }
-      };
+      }
 
-      const handleKeyPress = function (e) {
+      function handleKeyPress(e) {
         if (hasGuessed) {
           console.log("Winner");
           return;
@@ -273,7 +273,7 @@
         //32 is space
         //8 is backspace
         //13 is enter
-      };
+      }
 
       document.addEventListener("keydown", handleKeyPress);
 
