@@ -122,6 +122,22 @@
       let currentAttempt = 0;
       let currentWord = [];
 
+      function startInputing() {
+        document.addEventListener("keydown", handleKeyPress);
+
+        keyboardKeys.forEach((key) =>
+          key.addEventListener("click", handleKeyClick)
+        );
+      }
+
+      function stopInputing() {
+        document.removeEventListener("keydown", handleKeyPress);
+
+        keyboardKeys.forEach((key) =>
+          key.removeEventListener("click", handleKeyClick)
+        );
+      }
+
       function checkCorrectPosition(element, ans, guess, index) {
         let foundIndex = ans.indexOf(element);
         return (
@@ -219,6 +235,7 @@
           let stats;
           if (currentWordString === correctAnswer) {
             hasGuessed = true;
+            stopInputing();
             stats = Array(5).fill(STATUS.CORRECT_POSITION);
           } else {
             stats = getStatistics(currentWordString, correctAnswer);
@@ -232,6 +249,7 @@
           currentWord = [];
           currentAttempt = currentAttempt + 1;
           if (!hasGuessed && currentAttempt > 5) {
+            stopInputing();
             alert(
               "You've exhausted your attempts. The word was : " + correctAnswer
             );
@@ -275,23 +293,21 @@
         //13 is enter
       }
 
-      document.addEventListener("keydown", handleKeyPress);
+      function handleKeyClick(e) {
+        let keyCode;
+        let textValue = e.target.textContent;
+        if (textValue === "ENTER") {
+          keyCode = 13;
+        } else if (textValue === "CLEAR") {
+          keyCode = 8;
+        } else {
+          keyCode = textValue.charCodeAt(0);
+        }
+        let pseudoEvent = { keyCode };
+        handleKeyPress(pseudoEvent);
+      }
 
-      keyboardKeys.forEach((key) =>
-        key.addEventListener("click", (e) => {
-          let keyCode;
-          let textValue = e.target.textContent;
-          if (textValue === "ENTER") {
-            keyCode = 13;
-          } else if (textValue === "CLEAR") {
-            keyCode = 8;
-          } else {
-            keyCode = textValue.charCodeAt(0);
-          }
-          let pseudoEvent = { keyCode };
-          handleKeyPress(pseudoEvent);
-        })
-      );
+      startInputing();
     </script>
   </body>
 </html>
