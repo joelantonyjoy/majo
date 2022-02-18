@@ -173,12 +173,7 @@
       function updateRowWithStats(stats) {
         let columns = rows[currentAttempt].querySelectorAll(".input_column");
         columns.forEach((element, index) => {
-          element.style.background =
-            stats[index] == STATUS.CORRECT_POSITION
-              ? COLOR.CORRECT_POSITION
-              : stats[index] == STATUS.NOT_IN_THE_WORD
-              ? COLOR.NOT_IN_THE_WORD
-              : COLOR.WRONG_POSITION;
+          element.classList.add(COLOR[stats[index]]);
         });
       }
 
@@ -199,7 +194,7 @@
       function updateKeyBoardColor() {
         keyMaps.forEach((v, k) => {
           let element = document.querySelector("[data-key='" + k + "']");
-          element.style.background = COLOR[v];
+          if (COLOR[v]) element.classList.add(COLOR[v]);
         });
       }
 

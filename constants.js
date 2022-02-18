@@ -6,10 +6,9 @@ const STATUS = {
 };
 
 const COLOR = {
-  WRONG_POSITION: "#b59f3b",
-  NOT_IN_THE_WORD: "#3a3a3c",
-  CORRECT_POSITION: "#538d4e",
-  NOT_YET_FOUND: "#818384",
+  WRONG_POSITION: "wrong-position",
+  NOT_IN_THE_WORD: "incorrect",
+  CORRECT_POSITION: "correct",
 };
 
 const dictionary = [
