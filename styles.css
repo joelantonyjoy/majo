@@ -120,7 +120,7 @@ main {
   display: flex;
   opacity: 0;
   height: 0px;
-  z-index: 1;
+  z-index: -1;
   transform: translateY(50px);
   flex-direction: column;
   align-items: center;
@@ -128,7 +128,7 @@ main {
   padding: 0 24px;
   background: var(--bg-dark);
   position: absolute;
-  transition: all 300ms ease;
+  transition: all 100ms ease;
 }
 .instruction_container header {
   color: var(--text-color-dark);
@@ -173,4 +173,5 @@ main {
   opacity: 1;
   transform: translateY(0);
   height: 100%;
+  z-index: 1;
 }
