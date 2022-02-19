@@ -121,7 +121,7 @@ main {
   opacity: 0;
   height: 0px;
   z-index: 1;
-  transform: translateY(200px);
+  transform: translateY(50px);
   flex-direction: column;
   align-items: center;
   width: 100vw;
@@ -136,7 +136,7 @@ main {
   display: flex;
   justify-content: center;
   border: none;
-  margin-top: 10px;
+  margin-top: 24px;
   width: 100vw;
   max-width: var(--max-width);
 }
@@ -149,7 +149,7 @@ main {
   fill: var(--text-color-dark);
   cursor: pointer;
   position: absolute;
-  right: 0;
+  right: 24;
 }
 .instruction_container section {
   margin-top: 20px;
