@@ -16,11 +16,22 @@ html {
   background-color: var(--bg-dark);
   color: var(--text-color-dark);
 }
-header {
+.navbar {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
   text-align: center;
   padding: 8px;
   font-size: 32px;
   border-bottom: 1px solid var(--line-color-dark);
+}
+.navbar svg {
+  position: absolute;
+  left: 20;
+  fill: var(--text-color-dark);
+  cursor: pointer;
 }
 main {
   display: flex;
@@ -103,4 +114,63 @@ main {
 }
 .correct {
   background: #538d4e;
+}
+
+.instruction_container {
+  display: flex;
+  opacity: 0;
+  height: 0px;
+  z-index: 1;
+  transform: translateY(200px);
+  flex-direction: column;
+  align-items: center;
+  width: 100vw;
+  padding: 0 24px;
+  background: var(--bg-dark);
+  position: absolute;
+  transition: all 300ms ease;
+}
+.instruction_container header {
+  color: var(--text-color-dark);
+  position: relative;
+  display: flex;
+  justify-content: center;
+  border: none;
+  margin-top: 10px;
+  width: 100vw;
+  max-width: var(--max-width);
+}
+.instruction_container header h1 {
+  font-size: 1.5em;
+}
+
+.instruction_container svg {
+  color: var(--text-color-dark);
+  fill: var(--text-color-dark);
+  cursor: pointer;
+  position: absolute;
+  right: 0;
+}
+.instruction_container section {
+  margin-top: 20px;
+  max-width: var(--max-width);
+}
+.instruction_container p {
+  margin: 8px 0;
+}
+
+.instruction_container .examples {
+  margin: 20px 0;
+  border-bottom: 1px solid var(--line-color-dark);
+  border-top: 1px solid var(--line-color-dark);
+}
+
+.instruction_container .examples .example .row {
+  justify-content: flex-start;
+}
+
+.slideIn {
+  opacity: 1;
+  transform: translateY(0);
+  height: 100%;
 }

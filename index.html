@@ -22,7 +22,93 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <header>MAJO</header>
+    <div class="instruction_container">
+      <header>
+        <h1>HOW TO PLAY</h1>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          height="24"
+          viewBox="0 0 24 24"
+          width="24"
+        >
+          <path
+            fill="var(--color-tone-1)"
+            d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+          ></path>
+        </svg>
+      </header>
+      <section>
+        <div class="instructions">
+          <p>Guess the <strong>MAJO WORD</strong> in six tries.</p>
+          <p>
+            Each guess must be a valid five-letter word. Hit the enter button to
+            submit.
+          </p>
+          <p>
+            After each guess, the color of the tiles will change to show how
+            close your guess was to the word.
+          </p>
+          <div class="examples">
+            <p><strong>Examples</strong></p>
+            <div class="example">
+              <div class="row">
+                <div class="input_column correct">T</div>
+                <div class="input_column">E</div>
+                <div class="input_column">A</div>
+                <div class="input_column">R</div>
+                <div class="input_column">S</div>
+              </div>
+              <p>
+                The letter <strong>T</strong> is in the word and in the correct
+                spot.
+              </p>
+            </div>
+            <div class="example">
+              <div class="row">
+                <div class="input_column">P</div>
+                <div class="input_column wrong-position">E</div>
+                <div class="input_column">A</div>
+                <div class="input_column">C</div>
+                <div class="input_column">E</div>
+              </div>
+              <p>
+                The letter <strong>E</strong> is in the word but in the wrong
+                spot.
+              </p>
+            </div>
+            <div class="example">
+              <div class="row">
+                <div class="input_column">A</div>
+                <div class="input_column">P</div>
+                <div class="input_column">P</div>
+                <div class="input_column incorrect">L</div>
+                <div class="input_column">Y</div>
+              </div>
+              <p>
+                The letter <strong>R</strong> is not in the word in any spot.
+              </p>
+            </div>
+          </div>
+          <p>
+            <strong>Unlimited words each day!</strong>
+          </p>
+        </div>
+      </section>
+    </div>
+    <header class="navbar">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        height="24"
+        viewBox="0 0 24 24"
+        width="24"
+      >
+        <path
+          fill="var(--color-tone-1)"
+          d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"
+        ></path>
+      </svg>
+      MAJO
+    </header>
     <main>
       <div class="game_container">
         <div class="row">
@@ -107,6 +193,11 @@
     </main>
     <script src="constants.js"></script>
     <script>
+      let helpButton = document.querySelector(".navbar svg");
+      let helpModalButton = document.querySelector(
+        ".instruction_container svg"
+      );
+      let helpModal = document.querySelector(".instruction_container");
       let rows = [...document.querySelectorAll(".game_container .row")];
       let keyboardKeys = [...document.querySelectorAll(".keyboard-key")];
       let keyMaps = new Map();
@@ -116,6 +207,13 @@
         hasGuessed,
         currentAttempt,
         currentWord;
+
+      function toggleHelp() {
+        helpModal.classList.toggle("slideIn");
+      }
+
+      helpButton.addEventListener("click", toggleHelp);
+      helpModalButton.addEventListener("click", toggleHelp);
 
       function startInputing() {
         document.addEventListener("keydown", handleKeyPress);
