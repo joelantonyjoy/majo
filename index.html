@@ -318,7 +318,10 @@
 
       function handleEnterKeyPress() {
         let currentWordString = currentWord.join("").toLowerCase();
-        if (currentWord.length != 5) return;
+        if (currentWord.length != 5) {
+          vibrateWords();
+          return;
+        }
         if (!isValidWord(currentWordString)) {
           vibrateWords();
           return;
