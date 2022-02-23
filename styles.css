@@ -18,8 +18,8 @@ html {
 }
 .navbar {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
   position: relative;
   text-align: center;
@@ -27,9 +27,12 @@ html {
   font-size: 32px;
   border-bottom: 1px solid var(--line-color-dark);
 }
+
+.navbar h3 {
+  font-size: 32px;
+  font-weight: normal;
+}
 .navbar svg {
-  position: absolute;
-  left: 20;
   fill: var(--text-color-dark);
   cursor: pointer;
 }
@@ -167,6 +170,60 @@ main {
 
 .instruction_container .examples .example .row {
   justify-content: flex-start;
+}
+
+.settings_container {
+  display: flex;
+  opacity: 0;
+  height: 0px;
+  z-index: -1;
+  transform: translateY(50px);
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 100vw;
+  padding: 0 24px;
+  background: var(--bg-dark);
+  position: absolute;
+  transition: all 100ms ease;
+}
+.settings_container header {
+  color: var(--text-color-dark);
+  position: relative;
+  display: flex;
+  justify-content: center;
+  border: none;
+  margin-top: 24px;
+  width: 100vw;
+  max-width: var(--max-width);
+}
+.settings_container header h1 {
+  font-size: 1.5em;
+}
+
+.settings_container svg {
+  color: var(--text-color-dark);
+  fill: var(--text-color-dark);
+  cursor: pointer;
+  position: absolute;
+  right: 24;
+}
+.settings_container section {
+  display: flex;
+  max-width: var(--max-width);
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  flex-grow: 1;
+}
+.settings_container p {
+  margin: 8px 0;
+}
+
+.social_media {
+  display: flex;
+  margin: 12px;
+  gap: 20px;
 }
 
 .slideIn {
