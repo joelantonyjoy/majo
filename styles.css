@@ -1,10 +1,26 @@
 :root {
-  --bg-dark: #121213;
-  --text-color-dark: #fff;
-  --line-color-dark: #616a6e;
   --max-width: 540px;
-  --bg-keyboard-dark: #818384;
   user-select: none;
+}
+html {
+  --bg-normal: #121213;
+  --text-color-normal: #fff;
+  --text-color-secondary: #121213;
+  --line-color-normal: #616a6e;
+  --bg-keyboard-normal: #818384;
+  --bg-keyboard-incorrect: #3a3a3c;
+  --bg-keyboard-wrong: #b59f3b;
+  --bg-keyboard-correct: #538d4e;
+}
+
+html[data-theme="light"] {
+  --text-color-normal: #121213;
+  --text-color-secondary: #fff;
+  --bg-normal: #fff;
+  --bg-keyboard-normal: #d3d6da;
+  --bg-keyboard-incorrect: #787c7e;
+  --bg-keyboard-wrong: #c9b458;
+  --bg-keyboard-correct: #6aaa64;
 }
 * {
   margin: 0;
@@ -12,9 +28,10 @@
   box-sizing: border-box;
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
 }
-html {
-  background-color: var(--bg-dark);
-  color: var(--text-color-dark);
+html,
+body {
+  background-color: var(--bg-normal);
+  color: var(--text-color-normal);
 }
 .navbar {
   display: flex;
@@ -25,7 +42,9 @@ html {
   text-align: center;
   padding: 8px;
   font-size: 32px;
-  border-bottom: 1px solid var(--line-color-dark);
+  background-color: var(--bg-normal);
+  color: var(--text-color-normal);
+  border-bottom: 1px solid var(--line-color-normal);
 }
 
 .navbar h3 {
@@ -33,7 +52,8 @@ html {
   font-weight: normal;
 }
 .navbar svg {
-  fill: var(--text-color-dark);
+  color: var(--text-color-normal);
+  fill: var(--text-color-normal);
   cursor: pointer;
 }
 main {
@@ -44,7 +64,9 @@ main {
   max-width: var(--max-width);
   width: 100%;
   height: calc(100vh - 52px - 64px - 3px);
-  /* border: 1px solid var(--line-color-dark); */
+  background-color: var(--bg-normal);
+  color: var(--text-color-normal);
+  /* border: 1px solid var(--line-color-normal); */
 }
 .row {
   display: flex;
@@ -60,7 +82,8 @@ main {
   width: 50px;
   height: 50px;
   margin: 4px;
-  border: 1px solid var(--line-color-dark);
+  color: var(--text-color-normal);
+  border: 1px solid var(--line-color-normal);
   transition: all 300ms ease-in-out;
 }
 .shake {
@@ -87,7 +110,7 @@ main {
   width: 100%;
   padding: 8px;
   margin-bottom: 8px;
-  /* border: 1px solid var(--line-color-dark); */
+  /* border: 1px solid var(--line-color-normal); */
 }
 
 .keyboard-key {
@@ -101,8 +124,7 @@ main {
   height: 60px;
   margin: 2px;
   cursor: pointer;
-  color: var(--text-color-dark);
-  background: var(--bg-keyboard-dark);
+  background: var(--bg-keyboard-normal);
 }
 .keyboard_container .row:nth-child(3) .keyboard-key:first-child,
 .keyboard_container .row:nth-child(3) .keyboard-key:last-child {
@@ -110,13 +132,19 @@ main {
 }
 
 .incorrect {
-  background: #3a3a3c;
+  background: var(--bg-keyboard-incorrect);
+  color: #fff;
+  border: none;
 }
 .wrong-position {
-  background: #b59f3b;
+  background: var(--bg-keyboard-wrong);
+  color: #fff;
+  border: none;
 }
 .correct {
-  background: #538d4e;
+  background: var(--bg-keyboard-correct);
+  color: #fff;
+  border: none;
 }
 
 .instruction_container {
@@ -129,12 +157,12 @@ main {
   align-items: center;
   width: 100vw;
   padding: 0 24px;
-  background: var(--bg-dark);
+  background: var(--bg-normal);
   position: absolute;
   transition: all 100ms ease;
 }
 .instruction_container header {
-  color: var(--text-color-dark);
+  color: var(--text-color-normal);
   position: relative;
   display: flex;
   justify-content: center;
@@ -148,8 +176,8 @@ main {
 }
 
 .instruction_container svg {
-  color: var(--text-color-dark);
-  fill: var(--text-color-dark);
+  color: var(--text-color-normal);
+  fill: var(--text-color-normal);
   cursor: pointer;
   position: absolute;
   right: 24;
@@ -164,8 +192,8 @@ main {
 
 .instruction_container .examples {
   margin: 20px 0;
-  border-bottom: 1px solid var(--line-color-dark);
-  border-top: 1px solid var(--line-color-dark);
+  border-bottom: 1px solid var(--line-color-normal);
+  border-top: 1px solid var(--line-color-normal);
 }
 
 .instruction_container .examples .example .row {
@@ -183,12 +211,13 @@ main {
   justify-content: space-between;
   width: 100vw;
   padding: 0 24px;
-  background: var(--bg-dark);
+  color: var(--text-color-normal);
+  background: var(--bg-normal);
   position: absolute;
   transition: all 100ms ease;
 }
 .settings_container header {
-  color: var(--text-color-dark);
+  color: var(--text-color-normal);
   position: relative;
   display: flex;
   justify-content: center;
@@ -202,8 +231,7 @@ main {
 }
 
 .settings_container svg {
-  color: var(--text-color-dark);
-  fill: var(--text-color-dark);
+  fill: var(--text-color-normal);
   cursor: pointer;
   position: absolute;
   right: 24;
