@@ -214,7 +214,6 @@ main {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  flex-grow: 1;
 }
 .settings_container p {
   margin: 8px 0;
@@ -226,6 +225,14 @@ main {
   gap: 20px;
 }
 
+.option_container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.option_container p {
+  margin: 8px;
+}
 .slideIn {
   opacity: 1;
   transform: translateY(0);

@@ -13,12 +13,22 @@ let settingsButton = document.querySelector(".navbar .settingsButton");
 let settingsModalButton = document.querySelector(".settings_container svg");
 let settingsModal = document.querySelector(".settings_container");
 
+//Dark mode Settings
+let darkModeInput = document.querySelector(
+  ".settings_container input[name='isDarkMode']"
+);
+darkModeInput.addEventListener("click", toggleTheme);
+
 function toggleHelp() {
   helpModal.classList.toggle("slideIn");
 }
 
 function toggleSettings() {
   settingsModal.classList.toggle("slideIn");
+}
+
+function toggleTheme(e) {
+  console.log(e.target.checked);
 }
 
 helpButton.addEventListener("click", toggleHelp);
