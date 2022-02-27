@@ -48,7 +48,7 @@ function setLocalStorage(key, value) {
   localStorage.setItem(key, value);
 }
 
-function getLocalStorage(key) {
+function getFromLocalStorage(key) {
   return localStorage.getItem(key);
 }
 
@@ -65,16 +65,16 @@ function updateKeysAndBoardFromCache(attemptedWords) {
 }
 
 function loadFromLocalStorage() {
-  let theme = getLocalStorage("majo-theme");
+  let theme = getFromLocalStorage("majo-theme");
   if (theme === "light") {
     darkModeInput.checked = false;
   }
   document.documentElement.setAttribute("data-theme", theme);
 
-  savedCorrectAnswer = getLocalStorage("correct-answer");
+  savedCorrectAnswer = getFromLocalStorage("correct-answer");
 
   correctAnswer = savedCorrectAnswer ?? correctAnswer;
-  let usedWords = getLocalStorage("attemptedWords");
+  let usedWords = getFromLocalStorage("attemptedWords");
   if (usedWords ?? false) {
     attemptedWords = JSON.parse(usedWords);
     if (attemptedWords.length === 6) {
@@ -172,7 +172,6 @@ function updateKeyBoardColor() {
   keyMaps.forEach((v, k) => {
     let element = document.querySelector("[data-key='" + k + "']");
     if (COLOR[v]) {
-      // console.log(k, v, element);
       element.classList.add(COLOR[v]);
     }
   });
@@ -215,33 +214,26 @@ function handleEnterKeyPress() {
     vibrateWords();
     return;
   }
-  let stats;
-  if (currentWordString === correctAnswer) {
-    hasGuessed = true;
-    stopInputing();
-    stats = Array(5).fill(STATUS.CORRECT_POSITION);
-  } else {
-    stats = getStatistics(currentWordString, correctAnswer);
-    attemptedWords.push(currentWordString.toUpperCase());
-  }
-
+  let stats = getStatistics(currentWordString, correctAnswer);
+  attemptedWords.push(currentWordString.toUpperCase());
   setLocalStorage("attemptedWords", JSON.stringify(attemptedWords));
+
   updateRowWithStats(stats, currentAttempt);
   updateKeyBoardWithStats(stats, currentWord);
   currentWord = [];
   currentAttempt = currentAttempt + 1;
-  checkWinLose();
+  checkWinLose(currentWordString);
 }
 
-function checkWinLose() {
-  if (hasGuessed) {
-    AlertWinLose(
+function checkWinLose(guess) {
+  if (guess === correctAnswer) {
+    alertWinLose(
       "You got it : " + correctAnswer + "\nStarting a new game right away :)",
       2000
     );
-  } else if (!hasGuessed && currentAttempt > 5) {
+  } else if (currentAttempt > 5) {
     stopInputing();
-    AlertWinLose(
+    alertWinLose(
       "You've exhausted your attempts. The word was : " +
         correctAnswer +
         "\nStarting a new game right away :)",
@@ -250,7 +242,7 @@ function checkWinLose() {
   }
 }
 
-function AlertWinLose(message, duration = 2000) {
+function alertWinLose(message, duration = 2000) {
   setTimeout(() => {
     alert(message);
     reset();
@@ -259,15 +251,6 @@ function AlertWinLose(message, duration = 2000) {
 }
 
 function handleKeyPress(e) {
-  if (hasGuessed) {
-    console.log("Winner");
-    return;
-  }
-  if (currentAttempt > 5) {
-    console.log("GameOver");
-    return;
-  }
-
   let keyCode = e.keyCode;
   if (keyCode >= 65 && keyCode <= 90) {
     if (currentWord.length < 5)
@@ -336,7 +319,6 @@ function startNewGame() {
   }
 
   console.log(correctAnswer);
-  hasGuessed = false;
   currentAttempt = attemptedWords.length;
   currentWord = [];
   startInputing();
