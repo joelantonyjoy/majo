@@ -30,10 +30,27 @@ function toggleSettings() {
 function toggleTheme(e) {
   if (e.target.checked) {
     document.documentElement.setAttribute("data-theme", "dark");
+    setLocalStorage("majo-theme", "dark");
   } else {
     document.documentElement.setAttribute("data-theme", "light");
+    setLocalStorage("majo-theme", "light");
   }
-  console.log(document.documentElement.getAttribute("data-theme"));
+}
+
+function loadThemeFromLocalStorage() {
+  let theme = getLocalStorage("majo-theme");
+  if (theme === "light") {
+    darkModeInput.checked = false;
+  }
+  document.documentElement.setAttribute("data-theme", theme);
+}
+
+function setLocalStorage(key, value) {
+  localStorage.setItem(key, value);
+}
+
+function getLocalStorage(key) {
+  return localStorage.getItem(key);
 }
 
 helpButton.addEventListener("click", toggleHelp);
@@ -260,4 +277,5 @@ function startNewGame() {
   startInputing();
 }
 
+loadThemeFromLocalStorage();
 startNewGame();
