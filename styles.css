@@ -261,6 +261,11 @@ main {
 .option_container p {
   margin: 8px;
 }
+
+.portfolio_link,
+.portfolio_link:visited {
+  color: var(--text-color-normal);
+}
 .slideIn {
   opacity: 1;
   transform: translateY(0);
