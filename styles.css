@@ -84,7 +84,11 @@ main {
   margin: 4px;
   color: var(--text-color-normal);
   border: 1px solid var(--line-color-normal);
-  transition: all 300ms ease-in-out;
+  transition: transform 300ms ease-in-out;
+}
+
+.input_column.flip {
+  transform: rotateX(90deg);
 }
 .shake {
   animation: shake 100ms ease 0ms 2;

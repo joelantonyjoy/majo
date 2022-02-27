@@ -62,8 +62,8 @@ function updateKeysAndBoardFromCache(attemptedWords) {
     updateRow(word, index);
   });
   currentAttempt = attemptedWords.length;
-  console.log(currentAttempt);
 }
+
 function loadFromLocalStorage() {
   let theme = getLocalStorage("majo-theme");
   if (theme === "light") {
@@ -136,7 +136,17 @@ function getStatistics(guess, ans) {
 function updateRowWithStats(stats, rowIndex) {
   let columns = rows[rowIndex].querySelectorAll(".input_column");
   columns.forEach((element, index) => {
-    element.classList.add(COLOR[stats[index]]);
+    setTimeout(() => element.classList.add("flip"), (index * 500) / 2);
+    element.addEventListener(
+      "transitionend",
+      (e) => {
+        if (e.propertyName === "transform") {
+          element.classList.remove("flip");
+          element.classList.add(COLOR[stats[index]]);
+        }
+      },
+      { once: true }
+    );
   });
 }
 
@@ -216,21 +226,33 @@ function handleEnterKeyPress() {
   updateKeyBoardWithStats(stats, currentWord);
   currentWord = [];
   currentAttempt = currentAttempt + 1;
+  checkWinLose();
+}
+
+function checkWinLose() {
   if (hasGuessed || (!hasGuessed && currentAttempt > 5)) {
     if (hasGuessed) {
-      alert(
-        "You got it : " + correctAnswer + "\nStarting a new game right away :)"
-      );
+      setTimeout(() => {
+        alert(
+          "You got it : " +
+            correctAnswer +
+            "\nStarting a new game right away :)"
+        );
+        reset();
+        startNewGame();
+      }, 2000);
     } else {
       stopInputing();
-      alert(
-        "You've exhausted your attempts. The word was : " +
-          correctAnswer +
-          "\nStarting a new game right away :)"
-      );
+      setTimeout(() => {
+        alert(
+          "You've exhausted your attempts. The word was : " +
+            correctAnswer +
+            "\nStarting a new game right away :)"
+        );
+        reset();
+        startNewGame();
+      }, 2000);
     }
-    reset();
-    startNewGame();
   }
 }
 
