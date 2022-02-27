@@ -77,6 +77,10 @@ function loadFromLocalStorage() {
   let usedWords = getLocalStorage("attemptedWords");
   if (usedWords ?? false) {
     attemptedWords = JSON.parse(usedWords);
+    if (attemptedWords.length === 6) {
+      reset();
+      startNewGame();
+    }
     updateKeysAndBoardFromCache(attemptedWords);
   }
 }
