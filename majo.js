@@ -234,30 +234,28 @@ function handleEnterKeyPress() {
 }
 
 function checkWinLose() {
-  if (hasGuessed || (!hasGuessed && currentAttempt > 5)) {
-    if (hasGuessed) {
-      setTimeout(() => {
-        alert(
-          "You got it : " +
-            correctAnswer +
-            "\nStarting a new game right away :)"
-        );
-        reset();
-        startNewGame();
-      }, 2000);
-    } else {
-      stopInputing();
-      setTimeout(() => {
-        alert(
-          "You've exhausted your attempts. The word was : " +
-            correctAnswer +
-            "\nStarting a new game right away :)"
-        );
-        reset();
-        startNewGame();
-      }, 2000);
-    }
+  if (hasGuessed) {
+    AlertWinLose(
+      "You got it : " + correctAnswer + "\nStarting a new game right away :)",
+      2000
+    );
+  } else if (!hasGuessed && currentAttempt > 5) {
+    stopInputing();
+    AlertWinLose(
+      "You've exhausted your attempts. The word was : " +
+        correctAnswer +
+        "\nStarting a new game right away :)",
+      2000
+    );
   }
+}
+
+function AlertWinLose(message, duration = 2000) {
+  setTimeout(() => {
+    alert(message);
+    reset();
+    startNewGame();
+  }, duration);
 }
 
 function handleKeyPress(e) {
@@ -269,10 +267,8 @@ function handleKeyPress(e) {
     console.log("GameOver");
     return;
   }
+
   let keyCode = e.keyCode;
-  // if (keyCode == 13 || keyCode == 8 || (keyCode >= 65 && keyCode <= 90)) {
-  //   console.log(keyCode);
-  // }
   if (keyCode >= 65 && keyCode <= 90) {
     if (currentWord.length < 5)
       currentWord.push(String.fromCharCode(keyCode).toUpperCase());
@@ -287,11 +283,6 @@ function handleKeyPress(e) {
   if (keyCode == 13) {
     handleEnterKeyPress();
   }
-
-  //65-90 is alphabtets
-  //32 is space
-  //8 is backspace
-  //13 is enter
 }
 
 function handleKeyClick(e) {
