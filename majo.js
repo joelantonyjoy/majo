@@ -1,7 +1,14 @@
 let rows = [...document.querySelectorAll(".game_container .row")];
 let keyboardKeys = [...document.querySelectorAll(".keyboard-key")];
 let keyMaps = new Map();
-let size, answerIndex, correctAnswer, hasGuessed, currentAttempt, currentWord;
+let size,
+  answerIndex,
+  correctAnswer,
+  hasGuessed,
+  currentAttempt,
+  currentWord,
+  savedCorrectAnswer,
+  attemptedWords = [];
 
 //Help Modal Feature
 let helpButton = document.querySelector(".navbar .helpButton");
@@ -37,20 +44,41 @@ function toggleTheme(e) {
   }
 }
 
-function loadThemeFromLocalStorage() {
-  let theme = getLocalStorage("majo-theme");
-  if (theme === "light") {
-    darkModeInput.checked = false;
-  }
-  document.documentElement.setAttribute("data-theme", theme);
-}
-
 function setLocalStorage(key, value) {
   localStorage.setItem(key, value);
 }
 
 function getLocalStorage(key) {
   return localStorage.getItem(key);
+}
+
+function updateKeysAndBoardFromCache(attemptedWords) {
+  let stats;
+  currentAttempt = 0;
+  attemptedWords.forEach((word, index) => {
+    stats = getStatistics(word, correctAnswer ?? savedCorrectAnswer);
+    updateRowWithStats(stats, index);
+    updateKeyBoardWithStats(stats, word);
+    updateRow(word, index);
+  });
+  currentAttempt = attemptedWords.length;
+  console.log(currentAttempt);
+}
+function loadFromLocalStorage() {
+  let theme = getLocalStorage("majo-theme");
+  if (theme === "light") {
+    darkModeInput.checked = false;
+  }
+  document.documentElement.setAttribute("data-theme", theme);
+
+  savedCorrectAnswer = getLocalStorage("correct-answer");
+
+  correctAnswer = savedCorrectAnswer ?? correctAnswer;
+  let usedWords = getLocalStorage("attemptedWords");
+  if (usedWords ?? false) {
+    attemptedWords = JSON.parse(usedWords);
+    updateKeysAndBoardFromCache(attemptedWords);
+  }
 }
 
 helpButton.addEventListener("click", toggleHelp);
@@ -105,14 +133,14 @@ function getStatistics(guess, ans) {
   return arr;
 }
 
-function updateRowWithStats(stats) {
-  let columns = rows[currentAttempt].querySelectorAll(".input_column");
+function updateRowWithStats(stats, rowIndex) {
+  let columns = rows[rowIndex].querySelectorAll(".input_column");
   columns.forEach((element, index) => {
     element.classList.add(COLOR[stats[index]]);
   });
 }
 
-function updateKeyBoardWithStats(stats) {
+function updateKeyBoardWithStats(stats, currentWord) {
   stats.forEach((stat, index) => {
     let currentKeyStatus = keyMaps.get(currentWord[index]);
     if (
@@ -129,12 +157,15 @@ function updateKeyBoardWithStats(stats) {
 function updateKeyBoardColor() {
   keyMaps.forEach((v, k) => {
     let element = document.querySelector("[data-key='" + k + "']");
-    if (COLOR[v]) element.classList.add(COLOR[v]);
+    if (COLOR[v]) {
+      // console.log(k, v, element);
+      element.classList.add(COLOR[v]);
+    }
   });
 }
 
-function updateRow() {
-  let columns = rows[currentAttempt].querySelectorAll(".input_column");
+function updateRow(currentWord, rowIndex) {
+  let columns = rows[rowIndex].querySelectorAll(".input_column");
   columns.forEach((element, index) => {
     if (currentWord[index]) {
       element.innerHTML = currentWord[index];
@@ -145,7 +176,9 @@ function updateRow() {
 }
 
 function isValidWord(currentWordString) {
-  return dictionary.indexOf(currentWordString) === -1 ? false : true;
+  return dictionary.indexOf(currentWordString.toLowerCase()) === -1
+    ? false
+    : true;
 }
 
 function vibrateWords() {
@@ -159,7 +192,7 @@ function vibrateWords() {
 }
 
 function handleEnterKeyPress() {
-  let currentWordString = currentWord.join("").toLowerCase();
+  let currentWordString = currentWord.join("").toUpperCase();
   if (currentWord.length != 5) {
     vibrateWords();
     return;
@@ -175,9 +208,12 @@ function handleEnterKeyPress() {
     stats = Array(5).fill(STATUS.CORRECT_POSITION);
   } else {
     stats = getStatistics(currentWordString, correctAnswer);
+    attemptedWords.push(currentWordString.toUpperCase());
   }
-  updateRowWithStats(stats);
-  updateKeyBoardWithStats(stats);
+
+  setLocalStorage("attemptedWords", JSON.stringify(attemptedWords));
+  updateRowWithStats(stats, currentAttempt);
+  updateKeyBoardWithStats(stats, currentWord);
   currentWord = [];
   currentAttempt = currentAttempt + 1;
   if (hasGuessed || (!hasGuessed && currentAttempt > 5)) {
@@ -212,13 +248,14 @@ function handleKeyPress(e) {
   //   console.log(keyCode);
   // }
   if (keyCode >= 65 && keyCode <= 90) {
-    if (currentWord.length < 5) currentWord.push(String.fromCharCode(keyCode));
-    updateRow();
+    if (currentWord.length < 5)
+      currentWord.push(String.fromCharCode(keyCode).toUpperCase());
+    updateRow(currentWord, currentAttempt);
   }
 
   if (keyCode == 8) {
     currentWord.pop();
-    updateRow();
+    updateRow(currentWord, currentAttempt);
   }
 
   if (keyCode == 13) {
@@ -261,6 +298,11 @@ function reset() {
   keyboardKeys.forEach((key) => {
     key.classList.remove(...["correct", "incorrect", "wrong-position"]);
   });
+
+  localStorage.removeItem("correct-answer");
+  localStorage.removeItem("attemptedWords");
+  savedCorrectAnswer = null;
+  attemptedWords = [];
 }
 
 function startNewGame() {
@@ -269,13 +311,19 @@ function startNewGame() {
   }
   size = dictionary.length;
   answerIndex = Math.round(Math.random() * size);
-  correctAnswer = dictionary[answerIndex];
+  correctAnswer = savedCorrectAnswer ?? dictionary[answerIndex];
+  correctAnswer = correctAnswer.toUpperCase();
+  if (correctAnswer !== savedCorrectAnswer) {
+    localStorage.setItem("correct-answer", correctAnswer.toUpperCase());
+    savedCorrectAnswer = correctAnswer;
+  }
+
   console.log(correctAnswer);
   hasGuessed = false;
-  currentAttempt = 0;
+  currentAttempt = attemptedWords.length;
   currentWord = [];
   startInputing();
 }
 
-loadThemeFromLocalStorage();
+loadFromLocalStorage();
 startNewGame();
