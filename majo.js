@@ -227,24 +227,21 @@ function handleEnterKeyPress() {
 
 function checkWinLose(guess) {
   if (guess === correctAnswer) {
-    alertWinLose(
-      "You got it : " + correctAnswer + "\nStarting a new game right away :)",
-      2000
-    );
+    alertWinLose("You got it : " + correctAnswer, 2000, true);
   } else if (currentAttempt > 5) {
     stopInputing();
     alertWinLose(
-      "You've exhausted your attempts. The word was : " +
-        correctAnswer +
-        "\nStarting a new game right away :)",
-      2000
+      "You've exhausted your attempts. \nThe word was : " + correctAnswer,
+      2000,
+      false
     );
   }
 }
 
-function alertWinLose(message, duration = 2000) {
+function alertWinLose(message, duration = 2000, hasWon) {
   setTimeout(() => {
-    alert(message);
+    let alertBox = AlertModal(message, hasWon);
+    document.body.appendChild(alertBox);
     reset();
     startNewGame();
   }, duration);
@@ -322,6 +319,36 @@ function startNewGame() {
   currentAttempt = attemptedWords.length;
   currentWord = [];
   startInputing();
+}
+
+function AlertModal(message, hasWon) {
+  let modalFragment = document.createDocumentFragment();
+  let overlayElement = document.createElement("div");
+  overlayElement.classList.add("modal_overlay");
+  let containerElement = document.createElement("div");
+  containerElement.classList.add("modal_container");
+  let headingElement = document.createElement("h3");
+  headingElement.classList.add("modal_heading");
+  headingElement.innerText = hasWon ? "You Won !!" : "You Lost";
+  let messageElement = document.createElement("p");
+  messageElement.classList.add("modal_message");
+  messageElement.innerText = message;
+  let buttonElement = document.createElement("button");
+  buttonElement.classList.add("modal_button");
+  buttonElement.innerText = "New Game";
+  containerElement.appendChild(headingElement);
+  containerElement.appendChild(messageElement);
+  containerElement.appendChild(buttonElement);
+
+  modalFragment.appendChild(overlayElement);
+  modalFragment.appendChild(containerElement);
+
+  buttonElement.addEventListener("click", () => {
+    document.body.removeChild(overlayElement);
+    document.body.removeChild(containerElement);
+  });
+
+  return modalFragment;
 }
 
 loadFromLocalStorage();

@@ -33,6 +33,10 @@ body {
   background-color: var(--bg-normal);
   color: var(--text-color-normal);
 }
+
+body {
+  position: relative;
+}
 .navbar {
   display: flex;
   flex-direction: row;
@@ -270,6 +274,50 @@ main {
 .portfolio_link:visited {
   color: var(--text-color-normal);
 }
+.modal_overlay {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  height: 100%;
+  background-color: var(--text-color-normal);
+  opacity: 0.6;
+  z-index: 3;
+}
+.modal_container {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: var(--bg-normal);
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 300px;
+  padding: 8px 16px;
+  z-index: 4;
+}
+
+.modal_heading {
+  text-align: center;
+  padding: 16px;
+}
+
+.modal_message {
+  width: 100%;
+  text-align: center;
+  padding: 16px;
+}
+
+.modal_button {
+  color: #fff;
+  background-color: var(--bg-keyboard-correct);
+  margin: 24px 0;
+  padding: 8px 16px;
+  outline: none;
+  border: none;
+}
+
 .slideIn {
   opacity: 1;
   transform: translateY(0);
