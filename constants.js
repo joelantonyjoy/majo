@@ -1,3 +1,8 @@
+const MESSAGES = {
+  WIN_MESSAGE: "Yay! You got it :) \nThe word was : ",
+  LOSE_MESSAGE: "You've exhausted your attempts. \nThe word was : ",
+  NEW_GAME: "New Game",
+};
 const STATUS = {
   CORRECT_POSITION: "CORRECT_POSITION",
   NOT_IN_THE_WORD: "NOT_IN_THE_WORD",

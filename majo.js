@@ -227,14 +227,10 @@ function handleEnterKeyPress() {
 
 function checkWinLose(guess) {
   if (guess === correctAnswer) {
-    alertWinLose("You got it : " + correctAnswer, 2000, true);
+    alertWinLose(MESSAGES.WIN_MESSAGE + correctAnswer, 2000, true);
   } else if (currentAttempt > 5) {
     stopInputing();
-    alertWinLose(
-      "You've exhausted your attempts. \nThe word was : " + correctAnswer,
-      2000,
-      false
-    );
+    alertWinLose(MESSAGES.LOSE_MESSAGE + correctAnswer, 2000, false);
   }
 }
 
@@ -335,7 +331,7 @@ function AlertModal(message, hasWon) {
   messageElement.innerText = message;
   let buttonElement = document.createElement("button");
   buttonElement.classList.add("modal_button");
-  buttonElement.innerText = "New Game";
+  buttonElement.innerText = MESSAGES.NEW_GAME;
   containerElement.appendChild(headingElement);
   containerElement.appendChild(messageElement);
   containerElement.appendChild(buttonElement);
